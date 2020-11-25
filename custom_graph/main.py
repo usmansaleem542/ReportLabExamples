@@ -7,15 +7,19 @@ from reportlab.platypus import (Flowable, Paragraph,
 from reportlab.graphics.charts.axes import Color
 from reportlab.pdfbase import pdfmetrics
 import math
+import numpy as np
+from generator import *
 
 class GraphAxis(Flowable):
-    def __init__(self, data, x=0, y=-0, width=500, height=350):
+    def __init__(self, data, x=0, y=-0, width=500, height=200):
         Flowable.__init__(self)
         self.Stats = {}
         self.Title = data['title']
-        self.dataX = data['time']
-        self.dataY = data['value']
-        self.errorRate = data['Q1']
+        self.dataX = data['data']['time']
+        self.dataY = data['data']['value']
+        self.Q1 = data['data']['Q1']
+        self.Q2 = data['data']['Q2']
+        self.NormalRange = data['normal_range']
 
         self.width = width
         self.height = height
@@ -26,7 +30,9 @@ class GraphAxis(Flowable):
         self.InitStats()
         self.mDataX = self.convert_xAxis_pixels(self.dataX)
         self.mDataY = self.convert_yAxis_pixels(self.dataY)
-        self.mDataErrorRate = self.convert_errorRate_pixels(self.errorRate)
+        self.mDataQ1 = self.convert_QData_pixels(self.Q1)
+        self.mDataQ2 = self.convert_QData_pixels(self.Q2)
+        # self.Padding = {"left": 0, "right": 0, "top": 0, "bottom": 0}
 
     def InitStats(self):
         self.Stats['xAxis'] = {}
@@ -44,7 +50,8 @@ class GraphAxis(Flowable):
     def GetHorizontalPosition(self, minLimit=0, maxLimit=24, step=3):
         minTime = min(self.dataX)
         start = int(datetime.fromtimestamp(minTime).hour / step) * step
-        end = math.ceil(datetime.fromtimestamp(max(self.dataX)).hour / step) * step
+        endDT = datetime.fromtimestamp(max(self.dataX))
+        end = math.ceil((endDT.hour + (endDT.minute/60)) / step) * step
 
         if end <= start:
             print("There Issue in Given Data For X Axis")
@@ -61,16 +68,21 @@ class GraphAxis(Flowable):
             timeD = time(hour=end, second=0, microsecond=0)
         maxTime = datetime.combine(minTime.date(), timeD)
 
+        print("X Min: ", minTime)
+        print("X Max: ", maxTime)
+
         self.Stats['xAxis']['min'] = minTime.timestamp()
         self.Stats['xAxis']['max'] = maxTime.timestamp()
-        self.Stats['xAxis']['pos'] = list(range(start, end+1, 3))
+        self.Stats['xAxis']['pos'] = list(range(start, end+1, step))
 
     def GetVerticalPosition(self, minLimit=None, maxLimit=None, step=50):
-        minV = int(min(self.dataY)/step)*step
+        maxV = max(max(self.dataY), np.array(self.Q1).max(), np.array(self.Q2).max())
+        minV= min(min(self.dataY), np.array(self.Q1).min(), np.array(self.Q2).min())
+        minV = math.floor(minV/step)*step
         if minLimit is not None:
             minV = min(minLimit, minV)
 
-        maxV = math.ceil(max(self.dataY)/step)*step
+        maxV = math.ceil(maxV/step)*step
         if maxLimit is not None:
             minV = min(maxLimit, maxV)
 
@@ -148,8 +160,6 @@ class GraphAxis(Flowable):
         self.canv.saveState()
         self.canv.setStrokeColor(Color(0.1, 0.1, 0.1, 0.3))
 
-        # self.canv.line(0, -5, 0, self.height)
-        # self.canv.line(-5, 0, self.width, 0)
         self.canv.setFontSize(9)
         self.DrawVGrid(grid)
         self.DrawHGrid(grid)
@@ -170,7 +180,7 @@ class GraphAxis(Flowable):
         width = pdfmetrics.stringWidth(txt, font_name, font_size)
         return width, height
 
-    def convert_errorRate_pixels(self, data):
+    def convert_QData_pixels(self, data):
         xMin = self.Stats['yAxis']['min']
         xMax = self.Stats['yAxis']['max']
         newData = []
@@ -199,13 +209,44 @@ class GraphAxis(Flowable):
 
         return newData
 
-    def plot(self, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1):
+    def WriteText(self, txt, x, y, rot=0):
+        self.canv.saveState()
+        self.canv.translate(x, y)
+        self.canv.rotate(rot)
+        self.canv.drawRightString(0, 0, str(txt))
+        self.canv.restoreState()
+
+    def DrawNormalRange(self, txt = "Normal Range"):
+        rangeLow = self.Point2Pixel(self.Stats['yAxis']['min'], self.Stats['yAxis']['max'], 0, self.height, self.NormalRange[0])
+        rangeHigh = self.Point2Pixel(self.Stats['yAxis']['min'], self.Stats['yAxis']['max'], 0, self.height, self.NormalRange[1])
+
+        self.canv.saveState()
+        clr = np.array([3, 125, 80, 125])/255
+        self.canv.setStrokeColor(Color(*clr))
+        w, h = self.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
+        self.canv.setLineWidth(2)  # small lines
+        self.canv.line(0, rangeLow, self.width+h, rangeLow)
+        self.canv.line(0, rangeHigh, self.width+h, rangeHigh)
+
+        diff = abs(rangeLow - rangeHigh)
+        y = rangeLow + abs(w - diff)/2
+        self.WriteText(txt, x=self.width+h, y=y, rot=-90)
+        self.canv.setFontSize(8)
+        w, h = self.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
+        self.WriteText(self.NormalRange[0], self.width + (h*4), rangeLow - (h/2))
+        self.WriteText(self.NormalRange[1], self.width + (h*4), rangeHigh - (h/2))
+        self.canv.restoreState()
+
+    def plot(self, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1, style=None):
 
         if len(x) != len(y):
             return
         print("Drawing")
 
         self.canv.saveState()
+        if style == 'dash':
+            self.canv.setStrokeColor(Color(*color))
+            self.canv.setDash(6, 4)
         self.canv.setFillColor(Color(*color))
         self.canv.setLineWidth(2)  # small lines
         self.canv.setLineCap(1)
@@ -227,31 +268,35 @@ class GraphAxis(Flowable):
         self.Figure(grid=True)
         self.setXlabel("Time")
         self.setYLabel("Blood Pressure")
-        if self.errorRate is not None:
-            erD = np.array(self.mDataErrorRate)
+
+        if self.Q2 is not None:
+            erD = np.array(self.mDataQ2)
             x = np.append(self.mDataX, np.flip(self.mDataX))
             y = np.append(erD[:, 0], np.flip(erD[:, 1]))
-            self.plot(x, y, color= (0.5,0.8,0.9, 0.5), stroke=0, fill=1)
+            self.plot(x, y, color= (0.16, 0.5, 0.72, 0.3), stroke=1, fill=1, style='dash')
+
+        if self.Q1 is not None:
+            erD = np.array(self.mDataQ1)
+            x = np.append(self.mDataX, np.flip(self.mDataX))
+            y = np.append(erD[:, 0], np.flip(erD[:, 1]))
+            self.plot(x, y, color= (0.16, 0.5, 0.72, 0.4), stroke=0, fill=1)
 
         self.plot(self.mDataX, self.mDataY)
+        self.DrawNormalRange()
 
 
 import json
-
-with open('sample_data2.json', 'rb') as f:
-    data = json.load(f)
+data = GenerateData('sample_data2.json', offset=30)
+# with open('sample_data2.json', 'rb') as f:
+#     data = json.load(f)
 
 doc = SimpleDocTemplate("custom_graph.pdf", pagesize=letter)
 story = []
 styles = getSampleStyleSheet()
 
-
-dx = [946678831, 946710395, 946711366, 946720722, 946737503, 946738884, 946738973, 946747032, 946751234, 946752420]
-dy = [355, 100, 75, 263, 95, 213, 319, 218, 124, 293]
-errorRate = [[340, 370], [80, 120], [65, 105], [240, 280], [85, 105], [200, 230], [300, 325], [200, 230], [110, 145], [280, 300]]
 p = Paragraph("This is a table. " * 10, styles["Normal"])
 story.append(p)
-circle = GraphAxis(data)
+circle = GraphAxis(data, x=200, y=250)
 s = Spacer(width=0, height=60)
 story.append(circle)
 story.append(s)
