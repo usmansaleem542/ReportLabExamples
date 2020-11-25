@@ -59,7 +59,7 @@ class Figure(Flowable):
         Draw the shape, text, etc
         """
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
-        canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.1, 0.5, 0.1, 0.1), fill=1)
+        canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
         data = generator.GenerateData()
         flowable = BPGraph(data, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
