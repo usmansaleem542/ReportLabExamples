@@ -19,7 +19,7 @@ def GenerateData(filename='sample_data2.json', offset = 50, randomN = False):
     start = datetime(year=2000, month= 1, day= 1, hour=0, minute=0, second=0, microsecond=0).timestamp()
     end = datetime(year=2000, month= 1, day= 1, hour=23, minute=59, second=59, microsecond=999999).timestamp()
     dataBP = {"title": "Blood Pressure Graph", "xLabel": "Time", "yLabel": "Blood Pressure",
-              "normal_range": [50, 100],
+              "normal_range": [50, 200],
               "data": { "time": [], "value": [], "Q1": [], "Q2": [] }}
 
     data = dataBP['data']
