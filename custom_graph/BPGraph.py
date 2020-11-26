@@ -64,8 +64,8 @@ class BPGraph(Flowable):
             timeD = time(hour=end, second=0, microsecond=0)
         maxTime = datetime.combine(minTime.date(), timeD)
 
-        print("X Min: ", minTime)
-        print("X Max: ", maxTime)
+        # print("X Min: ", minTime)
+        # print("X Max: ", maxTime)
 
         self.Stats['xAxis']['min'] = minTime.timestamp()
         self.Stats['xAxis']['max'] = maxTime.timestamp()
@@ -88,6 +88,7 @@ class BPGraph(Flowable):
 
         self.Stats['yAxis']['min'] = minV
         self.Stats['yAxis']['max'] = maxV
+        step =  math.ceil(((maxV - minV)*.10)/50) * 50
         self.Stats['yAxis']['pos'] = list(range(minV, maxV+1, step))
 
     def DrawVGrid(self, grid=False):
@@ -102,10 +103,10 @@ class BPGraph(Flowable):
                 timeD = time(hour=col, second=0, microsecond=0)
             newT = datetime.combine(minTime.date(), timeD)
             posX = canv_utils.Point2Pixel(minTime.timestamp(), maxTime.timestamp(), 0, self.width, newT.timestamp())
-            print(newT, posX, self.width)
+            # print(newT, posX, self.width)
             pos = [posX, -(h*2)]
             if grid: self.canv.line(pos[0], -(h/3), pos[0], self.height)
-            labelStr = f'{newT.hour} {newT.strftime("%p").lower()}'
+            labelStr = newT.strftime('%I %P')
             self.canv.drawString(pos[0] - (h*1.2), pos[1], labelStr)
 
     def DrawHGrid(self, grid):
@@ -127,11 +128,9 @@ class BPGraph(Flowable):
         canv_utils.DrawRectangle(self.canv, (0,0), (self.width, self.height))
         self.canv.saveState()
         self.canv.setStrokeColor(Color(0.1, 0.1, 0.1, 0.3))
-
         self.canv.setFontSize(9)
         self.DrawVGrid(grid)
         self.DrawHGrid(grid)
-
         self.canv.restoreState()
 
     def convert_QData_pixels(self, data):
@@ -189,28 +188,6 @@ class BPGraph(Flowable):
         canv_utils.WriteText(self.canv, self.NormalRange[1], self.width + (h*4), rangeHigh - (h/2))
         self.canv.restoreState()
 
-    def plot(self, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1, style=None):
-
-        if len(x) != len(y):
-            return
-        print("Drawing")
-
-        self.canv.saveState()
-        if style == 'dash':
-            self.canv.setStrokeColor(Color(*color))
-            self.canv.setDash(6, 4)
-        self.canv.setFillColor(Color(*color))
-        self.canv.setLineWidth(2)  # small lines
-        self.canv.setLineCap(1)
-        self.canv.setLineJoin(1)
-        p = self.canv.beginPath()
-        p.moveTo(x[0] , y[0])
-        for i in range(len(x)):
-            p.lineTo(x[i], y[i])
-
-        self.canv.drawPath(p, stroke=stroke, fill=fill)
-        p.close()
-        self.canv.restoreState()
 
     def draw(self):
         """
@@ -223,13 +200,13 @@ class BPGraph(Flowable):
             erD = np.array(self.mDataQ2)
             x = np.append(self.mDataX, np.flip(self.mDataX))
             y = np.append(erD[:, 0], np.flip(erD[:, 1]))
-            self.plot(x, y, color= (0.16, 0.5, 0.72, 0.3), stroke=1, fill=1, style='dash')
+            canv_utils.drawLine(self.canv, x, y, color= (0.16, 0.5, 0.72, 0.3), stroke=1, fill=1, style='dash')
 
         if self.Q1 is not None:
             erD = np.array(self.mDataQ1)
             x = np.append(self.mDataX, np.flip(self.mDataX))
             y = np.append(erD[:, 0], np.flip(erD[:, 1]))
-            self.plot(x, y, color= (0.16, 0.5, 0.72, 0.4), stroke=0, fill=1)
+            canv_utils.drawLine(self.canv, x, y, color= (0.16, 0.5, 0.72, 0.4), stroke=0, fill=1)
 
-        self.plot(self.mDataX, self.mDataY)
+        canv_utils.drawLine(self.canv, self.mDataX, self.mDataY)
         self.DrawNormalRange()

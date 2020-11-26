@@ -1,3 +1,12 @@
+from custom_graph import generator
+import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
+
+data = generator.GenerateData()
+data['data']['value'][0] = 1950
+plt.plot(data['data']['time'], data['data']['value'])
+plt.show()
+exit()
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 c = canvas.Canvas("rotate.pdf")

@@ -41,3 +41,25 @@ def WriteText(canv, txt, x, y, rot=0):
 def DrawCustomFlowable(canv, flowable, xy, availableWH):
     flowable.wrapOn(canv, *availableWH)
     flowable.drawOn(canv, *xy)
+
+def drawLine(canv, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1, style=None):
+
+    if len(x) != len(y):
+        return
+
+    canv.saveState()
+    if style == 'dash':
+        canv.setStrokeColor(Color(*color))
+        canv.setDash(6, 4)
+    canv.setFillColor(Color(*color))
+    canv.setLineWidth(2)  # small lines
+    canv.setLineCap(1)
+    canv.setLineJoin(1)
+    p = canv.beginPath()
+    p.moveTo(x[0] , y[0])
+    for i in range(len(x)):
+        p.lineTo(x[i], y[i])
+
+    canv.drawPath(p, stroke=stroke, fill=fill)
+    p.close()
+    canv.restoreState()

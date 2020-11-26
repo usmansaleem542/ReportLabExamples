@@ -45,7 +45,7 @@ def GenerateData(filename='sample_data2.json', offset = 50, randomN = False):
     data["Q1"] = list(df.Q1)
     data["Q2"] = list(df.Q2)
 
-    print(df.head())
+    # print(df.head())
     with open(filename, 'w') as f:
         f.write(json.dumps(dataBP, indent=4))
         f.close()
