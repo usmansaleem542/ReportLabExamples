@@ -11,7 +11,6 @@ class BPGraph(Flowable):
     def __init__(self, data, width=500, height=200):
         Flowable.__init__(self)
         self.Stats = {}
-        self.Title = data['title']
         self.dataX = data['data']['time']
         self.dataY = data['data']['value']
         self.Q1 = data['data']['Q1']

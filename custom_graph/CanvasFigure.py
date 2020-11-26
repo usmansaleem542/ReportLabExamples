@@ -11,7 +11,7 @@ class CanvasFigure(Flowable):
         self.height = height
         self.dataX = dataX
         self.dataY = dataY
-        self.Padding = {"left": 50, "right": 40, "top": 10, "bottom": 50}
+        self.Padding = {"left": 50, "right": 100, "top":50, "bottom": 50}
         self.Init()
 
     def Init(self):
@@ -27,20 +27,28 @@ class CanvasFigure(Flowable):
         self.ah = availHeight
         return self.width, self.height
 
-
     def setXlabel(self, txt):
-        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
         self.canv.saveState()
-        self.canv.translate((self.width/2) + (w/2), max(0, abs(h-self.Padding['bottom'])*0.3))
+        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
+        self.canv.translate((self.pWidth/2) + (w/2)+self.Padding['left'], max(0, abs(h-self.Padding['bottom'])*0.3))
         self.canv.rotate(0)
         self.canv.drawRightString(0, 0, txt)
         self.canv.restoreState()
 
     def setYLabel(self, txt):
-        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
         self.canv.saveState()
+        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
         self.canv.translate(max(0, abs(h-self.Padding['left'])*0.5), (self.pHeight/2) + (w/2)+self.Padding['bottom'])
         self.canv.rotate(90)
+        self.canv.drawRightString(0, 0, txt)
+        self.canv.restoreState()
+
+    def setTitle(self, txt):
+        self.canv.saveState()
+        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
+        x = (self.pWidth/2) + (w/2)+self.Padding['left']
+
+        self.canv.translate(x, min(self.height-h, self.height - (self.Padding['top'])/2))
         self.canv.drawRightString(0, 0, txt)
         self.canv.restoreState()
 
@@ -48,7 +56,7 @@ class CanvasFigure(Flowable):
         """
         Draw the shape, text, etc
         """
-
+        self.setTitle("--- Blood Pressure Graph ---")
         self.setXlabel("Time")
         self.setYLabel("Blood Pressure")
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
