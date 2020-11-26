@@ -3,6 +3,7 @@ from reportlab.platypus import Flowable
 from custom_graph import generator
 from custom_graph import canv_utils as canv_utils
 from custom_graph.BPGraph import BPGraph
+import numpy as np
 
 class CanvasFigure(Flowable):
     def __init__(self, dataX, dataY, width=600, height=500):
@@ -11,7 +12,7 @@ class CanvasFigure(Flowable):
         self.height = height
         self.dataX = dataX
         self.dataY = dataY
-        self.Padding = {"left": 50, "right": 100, "top":50, "bottom": 50}
+        self.Padding = {"left": 50, "right": 50, "top":50, "bottom": 50}
         self.Init()
 
     def Init(self):
@@ -60,7 +61,7 @@ class CanvasFigure(Flowable):
         self.setXlabel("Time")
         self.setYLabel("Blood Pressure")
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
-        canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
+        # canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
         data = generator.GenerateData()
         flowable = BPGraph(data, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))

@@ -3,6 +3,8 @@ import pandas as pd
 import json
 from datetime import datetime
 
+np.random.seed(5)
+
 def get_Point2Pixel(x1, x2, y1, y2, point):
     slope = (y2 - y1) / (x2 - x1)
     pixVal = y1 + slope * (point - x1)
