@@ -124,22 +124,6 @@ class BPGraph(Flowable):
             # vPos.append(pos)
             self.canv.drawString(pos[0], pos[1] - (h/3), str(rowV))
 
-    def setXlabel(self, txt):
-        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
-        self.canv.saveState()
-        self.canv.translate((self.width/2) + (w/2), -(h*4))
-        self.canv.rotate(0)
-        self.canv.drawRightString(0, 0, txt)
-        self.canv.restoreState()
-
-    def setYLabel(self, txt):
-        w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
-        self.canv.saveState()
-        self.canv.translate(-(h*3), (self.height/2) + (w/2))
-        self.canv.rotate(90)
-        self.canv.drawRightString(0, 0, txt)
-        self.canv.restoreState()
-
     def Figure(self, grid=False):
         canv_utils.DrawRectangle(self.canv, (0,0), (self.width, self.height))
         self.canv.saveState()
@@ -235,8 +219,6 @@ class BPGraph(Flowable):
         """
         import numpy as np
         self.Figure(grid=True)
-        self.setXlabel("Time")
-        self.setYLabel("Blood Pressure")
 
         if self.Q2 is not None:
             erD = np.array(self.mDataQ2)
