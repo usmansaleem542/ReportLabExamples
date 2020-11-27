@@ -19,6 +19,8 @@ class DrawAxis(Flowable):
         self.Stats['xAxis'] = {}
         self.Stats['yAxis'] = {}
         self.Stats = self.CanvFig.dp.Stats
+        self.xAxisDataFormator = self.CanvFig.dp.xAxisDataFormator
+        self.yAxisDataFormator = self.CanvFig.dp.yAxisDataFormator
 
     def wrap(self, availWidth, availHeight):
         print("w,h ", availWidth, availHeight)
@@ -39,7 +41,11 @@ class DrawAxis(Flowable):
             posX = canv_utils.Point2Pixel(minTime, maxTime, 0, self.width, col)
             pos = [posX, -(h*2)]
             self.canv.line(pos[0], -(h/3), pos[0], gridH)
-            strLabel = datetime.fromtimestamp(col).strftime('%I %P')
+
+            strLabel = str(col)
+            if self.xAxisDataFormator is not None:
+                strLabel = self.xAxisDataFormator(col)
+
             # canv_utils.WriteText(self.canv, strLabel, pos[0], pos[1], 0)
             canv_utils.WriteCenteredText(self.canv, strLabel, pos[0], pos[1])
             # self.canv.drawString(pos[0] - (h*1.2), pos[1], strLabel)
@@ -57,7 +63,10 @@ class DrawAxis(Flowable):
             posY = canv_utils.Point2Pixel(minV, maxV, 0, self.height, rowV)
             pos = [-h*3, posY]
             self.canv.line(-(h/3), pos[1], gridW, pos[1])
+
             strLabel = str(rowV)
+            if self.yAxisDataFormator is not None:
+                strLabel = self.yAxisDataFormator(rowV)
             self.canv.drawString(pos[0], pos[1] - (h/3), strLabel)
 
     def convert_xAxis_pixels(self, data):
