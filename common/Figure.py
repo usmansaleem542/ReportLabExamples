@@ -2,6 +2,8 @@ from common.CanvasFigure import CanvasFigure
 import numpy as np
 import math
 import sys
+
+
 class CGFigure:
     def __init__(self, figure_size, title=None, xlabel=None, ylabel=None, boundary=False):
         self.FigSize = figure_size
