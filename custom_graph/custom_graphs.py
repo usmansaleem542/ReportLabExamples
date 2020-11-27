@@ -36,12 +36,15 @@ class DrawAxis(Flowable):
         w, h = canv_utils.GetFontWidhHeight('12', self.canv._fontname, self.canv._fontsize)
         gridH = 0
         if grid: gridH = self.height
+        y = 227
         for col in cols:
             posX = canv_utils.Point2Pixel(minTime, maxTime, 0, self.width, col)
             pos = [posX, -(h*2)]
             self.canv.line(pos[0], -(h/3), pos[0], gridH)
             strLabel = datetime.fromtimestamp(col).strftime('%I %P')
-            self.canv.drawString(pos[0] - (h*1.2), pos[1], strLabel)
+            # canv_utils.WriteText(self.canv, strLabel, pos[0], pos[1], 0)
+            canv_utils.WriteCenteredText(self.canv, strLabel, pos[0], pos[1])
+            # self.canv.drawString(pos[0] - (h*1.2), pos[1], strLabel)
 
     def DrawHGrid(self, grid=True):
         rows = self.Stats['yAxis']['major']
@@ -56,7 +59,8 @@ class DrawAxis(Flowable):
             posY = canv_utils.Point2Pixel(minV, maxV, 0, self.height, rowV)
             pos = [-h*3, posY]
             self.canv.line(-(h/3), pos[1], gridW, pos[1])
-            self.canv.drawString(pos[0], pos[1] - (h/3), str(rowV))
+            strLabel = str(rowV)
+            self.canv.drawString(pos[0], pos[1] - (h/3), strLabel)
 
     def convert_xAxis_pixels(self, data):
         xMin = self.Stats['xAxis']['min']

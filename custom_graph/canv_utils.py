@@ -1,5 +1,6 @@
 from reportlab.graphics.charts.axes import Color
 from reportlab.pdfbase import pdfmetrics
+import math
 
 def Point2Pixel(x1, x2, y1, y2, point):
     slope = (y2 - y1) / (x2 - x1)
@@ -31,9 +32,33 @@ def GetFontWidhHeight(txt, font_name, font_size):
     width = pdfmetrics.stringWidth(txt, font_name, font_size)
     return width, height
 
+def GetRotFontWidhHeight(canv, rot, txt, font_name, font_size):
+    canv.saveState()
+    face = pdfmetrics.getFont(font_name).face
+    ascent = (face.ascent * font_size) / 1000.0
+    descent = (face.descent * font_size) / 1000.0
+    descent = -descent
+    height = ascent + descent
+    width = pdfmetrics.stringWidth(txt, font_name, font_size)
+    h = height * abs(math.cos(rot)) + width * abs(math.sin(rot))
+    w = width * abs(math.cos(rot)) + height * abs(math.sin(rot))
+    canv.restoreState()
+    return w, h
+
 def WriteText(canv, txt, x, y, rot=0):
     canv.saveState()
     canv.translate(x, y)
+    canv.rotate(rot)
+    canv.drawRightString(0, 0, str(txt))
+    canv.restoreState()
+
+def WriteCenteredText(canv, txt, x, y, rot=-45):
+    w, h = GetRotFontWidhHeight(canv, rot, txt, canv._fontname, canv._fontsize)
+    canv.saveState()
+    if rot < 0:
+        canv.translate(x + (w/2), y-(h/2))
+    else:
+        canv.translate(x + (w/2), y+(h/2))
     canv.rotate(rot)
     canv.drawRightString(0, 0, str(txt))
     canv.restoreState()
