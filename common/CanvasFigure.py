@@ -1,10 +1,9 @@
 from reportlab.platypus import Flowable
 
-from custom_graph import generator
-from custom_graph import canv_utils as canv_utils
-from custom_graph.custom_graphs import DrawAxis, LineGraph, RangePlot
+from common import canv_utils as canv_utils
+from components import DrawAxis, LineGraph, RangePlot
 
-class CanvasFigure2(Flowable):
+class CanvasFigure(Flowable):
     def __init__(self, dp):
         Flowable.__init__(self)
         self.dp = dp

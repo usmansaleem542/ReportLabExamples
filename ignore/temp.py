@@ -1,6 +1,5 @@
-from custom_graph import generator
+from data import generator
 import matplotlib.pyplot as plt
-from matplotlib.dates import DateFormatter
 
 data = generator.GenerateData()
 data['data']['value'][0] = 1950

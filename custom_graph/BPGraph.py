@@ -1,9 +1,9 @@
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime, time
-from reportlab.platypus import (Flowable, Paragraph, SimpleDocTemplate, Spacer)
+from reportlab.platypus import (Flowable)
 from reportlab.graphics.charts.axes import Color
 
-from custom_graph import canv_utils
+from common import canv_utils
 import numpy as np
 import math
 
@@ -125,7 +125,7 @@ class BPGraph(Flowable):
             self.canv.drawString(pos[0], pos[1] - (h/3), str(rowV))
 
     def Figure(self, grid=False):
-        canv_utils.DrawRectangle(self.canv, (0,0), (self.width, self.height))
+        canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
         self.canv.saveState()
         self.canv.setStrokeColor(Color(0.1, 0.1, 0.1, 0.3))
         self.canv.setFontSize(9)
@@ -181,11 +181,11 @@ class BPGraph(Flowable):
         self.canv.setFontSize(fontSize)
         w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
         y = rangeLow + (diff - w)/2
-        canv_utils.WriteText(self.canv, txt, x=self.width+h, y=y, rot=-90)
+        canv_utils.WriteText(self.canv, txt, x=self.width + h, y=y, rot=-90)
         self.canv.setFontSize(8)
         w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
-        canv_utils.WriteText(self.canv, self.NormalRange[0], self.width + (h*4), rangeLow - (h/2))
-        canv_utils.WriteText(self.canv, self.NormalRange[1], self.width + (h*4), rangeHigh - (h/2))
+        canv_utils.WriteText(self.canv, self.NormalRange[0], self.width + (h * 4), rangeLow - (h / 2))
+        canv_utils.WriteText(self.canv, self.NormalRange[1], self.width + (h * 4), rangeHigh - (h / 2))
         self.canv.restoreState()
 
 

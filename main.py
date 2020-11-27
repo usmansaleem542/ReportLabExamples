@@ -3,10 +3,10 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 
 from custom_graph.CanvasFigure import CanvasFigure
-from custom_graph.Figure import CGFigure
-from custom_graph import generator
+from common.Figure import CGFigure
+from data import generator
 
-doc = SimpleDocTemplate("custom_graph.pdf", pagesize=letter)
+doc = SimpleDocTemplate("ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 p = Paragraph("This is a table. " * 10, style['Normal'])

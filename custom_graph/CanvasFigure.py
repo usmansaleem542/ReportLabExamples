@@ -1,9 +1,9 @@
 from reportlab.platypus import Flowable
 
-from custom_graph import generator
-from custom_graph import canv_utils as canv_utils
+from data import generator
+from common import canv_utils as canv_utils
 from custom_graph.BPGraph import BPGraph
-import numpy as np
+
 
 class CanvasFigure(Flowable):
     def __init__(self, dataX, dataY, width=600, height=500):

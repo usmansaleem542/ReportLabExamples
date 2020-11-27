@@ -1,5 +1,4 @@
-from custom_graph.CanvasFigure2 import CanvasFigure2
-from custom_graph import canv_utils
+from common.CanvasFigure import CanvasFigure
 import numpy as np
 import math
 import sys
@@ -93,5 +92,5 @@ class CGFigure:
         self.calculateMajorsY(minStep=50)
 
         print(self.DataStats)
-        cf = CanvasFigure2(self)
+        cf = CanvasFigure(self)
         return cf

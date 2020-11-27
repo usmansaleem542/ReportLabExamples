@@ -16,7 +16,7 @@ def gen(x, scale, offset, mult=100):
     dt = (dt * mult) + abs(min(dt)*mult)
     return np.round(dt) + offset
 
-def GenerateData(filename='sample_data2.json', offset = 50, randomN = False):
+def GenerateData(filename='ignore/sample_data2.json', offset = 50, randomN = False):
     # dt = datetime.now()
     start = datetime(year=2000, month= 1, day= 1, hour=0, minute=0, second=0, microsecond=0).timestamp()
     end = datetime(year=2000, month= 1, day= 1, hour=23, minute=59, second=59, microsecond=999999).timestamp()

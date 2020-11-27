@@ -4,7 +4,7 @@ from reportlab.lib.pagesizes import letter
 from custom_graph.CanvasFigure import CanvasFigure
 
 
-doc = SimpleDocTemplate("custom_graph.pdf", pagesize=letter)
+doc = SimpleDocTemplate("ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 p = Paragraph("This is a table. " * 10, style['Normal'])

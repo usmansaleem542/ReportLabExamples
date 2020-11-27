@@ -68,7 +68,6 @@ def DrawCustomFlowable(canv, flowable, xy, availableWH):
     flowable.drawOn(canv, *xy)
 
 def drawLine(canv, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1, style=None):
-
     if len(x) != len(y):
         return
 
