@@ -21,6 +21,15 @@ class LineGraph(Flowable):
         self.Stroke = 1
         self.InitStats()
 
+    def GetAboveBelow(self, ref, y, type):
+        if isinstance(y, int): y = np.repeat(150, len(ref))
+        if type == 'fillabove':
+            index = np.where(y > ref)
+        else:
+            index = np.where(y < ref)
+        y[index] = ref[index]
+        return y
+
     def InitStats(self):
         self.Stats['xAxis'] = {}
         self.Stats['yAxis'] = {}
@@ -34,9 +43,20 @@ class LineGraph(Flowable):
             self.Stroke = 0
             erD = np.array(self.data['y'])
             x = np.append(self.data['x'], np.flip(self.data['x']))
-            from datetime import datetime
-            print("==========", datetime.fromtimestamp(x.max()))
             y = np.append(erD[:, 0], np.flip(erD[:, 1]))
+            self.mDataX = self.convert_to_pixels_1d(x, (self.Stats['xAxis']['min'], self.Stats['xAxis']['max']), (0, self.width))
+            self.mDataY = self.convert_to_pixels_1d(y, (self.Stats['yAxis']['min'], self.Stats['yAxis']['max']), (0, self.height))
+
+        elif self.data['type'] in ['fillabove', 'fillbelow']:
+            self.Fill = 1
+            self.FillColor = (0.9, 0.9, 0.0, 1)
+            self.Stroke = 0
+            x = np.array(self.data['ref']['x'])
+            ref = np.array(self.data['ref']['y'])
+            erD = self.GetAboveBelow(ref, self.data['y'], self.data['type'])
+            x = np.append(x, np.flip(x))
+            y = np.append(ref, np.flip(erD))
+
             self.mDataX = self.convert_to_pixels_1d(x, (self.Stats['xAxis']['min'], self.Stats['xAxis']['max']), (0, self.width))
             self.mDataY = self.convert_to_pixels_1d(y, (self.Stats['yAxis']['min'], self.Stats['yAxis']['max']), (0, self.height))
 

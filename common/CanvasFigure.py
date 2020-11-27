@@ -61,7 +61,7 @@ class CanvasFigure(Flowable):
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
 
         for gd in self.dp.Plots:
-            if gd['type'] in ['lineplot', 'fillbetween']:
+            if gd['type'] in ['lineplot', 'fillbetween', 'fillabove', 'fillbelow']:
                 flowable = LineGraph(self, gd, width=self.pWidth, height=self.pHeight)
             elif gd['type'] == 'range':
                 flowable = RangePlot(self, gd, width=self.pWidth, height=self.pHeight)

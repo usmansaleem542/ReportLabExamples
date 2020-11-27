@@ -16,7 +16,7 @@ story.append(p)
 refGraph = CanvasFigure([], [], width=500, height=250)
 
 data = generator.GenerateData()
-graph = graphP.GetBloodGlucoseGraph(data, (500, 250))
+graph = graphP.GetBloodGlucoseGraph(data, (500, 250), boundary=True)
 
 story.append(refGraph)
 story.append(graph)

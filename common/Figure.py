@@ -13,6 +13,8 @@ class CGFigure:
         self.Boundary = boundary
         self.Plots = []
         self.DataStats = {'xMin': sys.maxsize, "xMax": -sys.maxsize, "yMin": sys.maxsize, "yMax": -sys.maxsize}
+        self.xAxisDataFormator = None
+        self.yAxisDataFormator = None
         self.Stats = {}
         self.Init()
 
@@ -68,12 +70,23 @@ class CGFigure:
 
     def plot(self, x, y):
         self.Plots.append({"type": "lineplot", "x": x, "y": y})
+        return self.Plots[-1]
 
     def fillbetween(self, x, y):
         self.Plots.append({"type": "fillbetween", "x": x, "y": y})
+        return self.Plots[-1]
+
+    def fillabove(self, ref, y=None):
+        self.Plots.append({"type": "fillabove", "ref": ref, "x": None,  "y": y})
+        return self.Plots[-1]
+
+    def fillbelow(self, ref, y=None):
+        self.Plots.append({"type": "fillbelow", "ref": ref, "x": None,  "y": y})
+        return self.Plots[-1]
 
     def plotrange(self, range):
         self.Plots.append({"type": "range", "x": None, "y": range})
+        return self.Plots[-1]
 
     def calcDataStats(self):
         for plData in self.Plots:
