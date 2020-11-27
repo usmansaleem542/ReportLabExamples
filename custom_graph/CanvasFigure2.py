@@ -2,8 +2,7 @@ from reportlab.platypus import Flowable
 
 from custom_graph import generator
 from custom_graph import canv_utils as canv_utils
-from custom_graph.custom_graphs import Grid, LineGraph
-from custom_graph.BPGraph import BPGraph
+from custom_graph.custom_graphs import DrawAxis, LineGraph, RangePlot
 
 class CanvasFigure2(Flowable):
     def __init__(self, dp):
@@ -59,18 +58,16 @@ class CanvasFigure2(Flowable):
         if self.dp.yLabel is not None: self.setYLabel(self.dp.yLabel)
         if self.dp.Boundary: canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
 
-        data = generator.GenerateData()
-
-        flowable = Grid(self, width=self.pWidth, height=self.pHeight)
+        flowable = DrawAxis(self, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
 
         for gd in self.dp.Plots:
             if gd['type'] in ['lineplot', 'fillbetween']:
                 flowable = LineGraph(self, gd, width=self.pWidth, height=self.pHeight)
-                canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
-
-        # for graphs in self.dp.Plots:
-        #     if 'lineplot' in graphs:
-        # flowable = LineGraph(self, data, width=self.pWidth, height=self.pHeight)
-        # canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
+            elif gd['type'] == 'range':
+                flowable = RangePlot(self, gd, width=self.pWidth, height=self.pHeight)
+            else:
+                print("We Don't Support Graph of Type", gd['type'])
+                continue
+            canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
 
