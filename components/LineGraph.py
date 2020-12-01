@@ -17,12 +17,11 @@ class LineGraph(Flowable):
         self.aw = 0
         self.ah = 0
         self.Fill = 0
-        self.FillColor = (0.16, 0.5, 0.72, 0.4)
         self.Stroke = 1
         self.InitStats()
 
     def GetAboveBelow(self, ref, y, type):
-        if isinstance(y, int): y = np.repeat(150, len(ref))
+        if isinstance(y, int): y = np.repeat(y, len(ref))
         if type == 'fillabove':
             index = np.where(y > ref)
         else:
@@ -36,10 +35,8 @@ class LineGraph(Flowable):
 
         self.Stats = self.CanvFig.dp.Stats
 
-
         if self.data['type'] ==  'fillbetween':
             self.Fill = 1
-            self.FillColor = (0.16, 0.5, 0.72, 0.4)
             self.Stroke = 0
             erD = np.array(self.data['y'])
             x = np.append(self.data['x'], np.flip(self.data['x']))
@@ -49,10 +46,9 @@ class LineGraph(Flowable):
 
         elif self.data['type'] in ['fillabove', 'fillbelow']:
             self.Fill = 1
-            self.FillColor = (0.9, 0.9, 0.0, 1)
             self.Stroke = 0
-            x = np.array(self.data['ref']['x'])
-            ref = np.array(self.data['ref']['y'])
+            x = np.array(self.data['ref_x'])
+            ref = np.array(self.data['ref_y'])
             erD = self.GetAboveBelow(ref, self.data['y'], self.data['type'])
             x = np.append(x, np.flip(x))
             y = np.append(ref, np.flip(erD))
@@ -69,7 +65,7 @@ class LineGraph(Flowable):
             exit()
 
     def wrap(self, availWidth, availHeight):
-        print("w,h ", availWidth, availHeight)
+        # print("w,h ", availWidth, availHeight)
         self.aw = availWidth
         self.ah = availHeight
         return self.width, self.height + 50
@@ -92,6 +88,12 @@ class LineGraph(Flowable):
                 canv_utils.Point2Pixel(sourceRange[0], sourceRange[1], targetRange[0], targetRange[1], data[i]))
         return newData
 
+    def GetRandomColor(self):
+        return (round(np.random.rand(), 1), round(np.random.rand(), 1),
+                              round(np.random.rand(), 1), 1.0)
     def draw(self):
-        canv_utils.drawLine(self.canv, self.mDataX, self.mDataY, color= self.FillColor, stroke=self.Stroke, fill=self.Fill)
+        color = self.data['args'].get('color', None)
+        if color is None:
+            color = self.GetRandomColor()
+        canv_utils.drawLine(self.canv, self.mDataX, self.mDataY, color= color, stroke=self.Stroke, fill=self.Fill)
 

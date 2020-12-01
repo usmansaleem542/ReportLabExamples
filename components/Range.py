@@ -31,7 +31,7 @@ class RangePlot(Flowable):
         self.Stats = self.CanvFig.dp.Stats
 
     def wrap(self, availWidth, availHeight):
-        print("w,h ", availWidth, availHeight)
+        # print("w,h ", availWidth, availHeight)
         self.aw = availWidth
         self.ah = availHeight
         return self.width, self.height + 50

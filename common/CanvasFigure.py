@@ -18,7 +18,7 @@ class CanvasFigure(Flowable):
         self.pWidth = self.width - (self.dp.PLeft + self.dp.PRight)
 
     def wrap(self, availWidth, availHeight):
-        print("w,h ", availWidth, availHeight)
+        # print("w,h ", availWidth, availHeight)
         self.aw = availWidth
         self.ah = availHeight
         return self.width, self.height

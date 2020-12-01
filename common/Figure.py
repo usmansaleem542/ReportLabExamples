@@ -68,24 +68,24 @@ class CGFigure:
         pos = list(range(minV, maxV+1, step))
         self.Stats['xAxis']['major'] = pos
 
-    def plot(self, x, y):
-        self.Plots.append({"type": "lineplot", "x": x, "y": y})
+    def plot(self, x, y, **keyargs):
+        self.Plots.append({"type": "lineplot", "x": x, "y": y, "args": keyargs})
         return self.Plots[-1]
 
-    def fillbetween(self, x, y):
-        self.Plots.append({"type": "fillbetween", "x": x, "y": y})
+    def fillbetween(self, x, y, **keyargs):
+        self.Plots.append({"type": "fillbetween", "x": x, "y": y, "args": keyargs})
         return self.Plots[-1]
 
-    def fillabove(self, ref, y=None):
-        self.Plots.append({"type": "fillabove", "ref": ref, "x": None,  "y": y})
+    def fillabove(self, refX, refY, y=None, **keyargs):
+        self.Plots.append({"type": "fillabove", "ref_x": refX, "ref_y": refY, "x": None,  "y": y, "args": keyargs})
         return self.Plots[-1]
 
-    def fillbelow(self, ref, y=None):
-        self.Plots.append({"type": "fillbelow", "ref": ref, "x": None,  "y": y})
+    def fillbelow(self, refX, refY, y=None, **keyargs):
+        self.Plots.append({"type": "fillbelow", "ref_x": refX, "ref_y": refY, "x": None,  "y": y, "args": keyargs})
         return self.Plots[-1]
 
-    def plotrange(self, range):
-        self.Plots.append({"type": "range", "x": None, "y": range})
+    def plotrange(self, range, **keyargs):
+        self.Plots.append({"type": "range", "x": None, "y": range, "args": keyargs})
         return self.Plots[-1]
 
     def calcDataStats(self):

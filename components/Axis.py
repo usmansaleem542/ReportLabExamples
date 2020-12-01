@@ -23,13 +23,12 @@ class DrawAxis(Flowable):
         self.yAxisDataFormator = self.CanvFig.dp.yAxisDataFormator
 
     def wrap(self, availWidth, availHeight):
-        print("w,h ", availWidth, availHeight)
+        # print("w,h ", availWidth, availHeight)
         self.aw = availWidth
         self.ah = availHeight
         return self.width, self.height + 50
 
     def DrawVGrid(self, grid=True):
-        from datetime import datetime
         cols = self.Stats['xAxis']['major']
         minTime = self.Stats['xAxis']['min']
         maxTime = self.Stats['xAxis']['max']
