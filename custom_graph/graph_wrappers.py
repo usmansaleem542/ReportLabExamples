@@ -27,3 +27,12 @@ def GetBloodGlucoseGraph(data, size, title="Graph Title", xlabel='Time', ylabel=
     ax.plotrange(data['normal_range'])
     graph = ax.render()
     return graph
+
+def GetWeekGraph(data, size, title="Bar Graph Title", boundary=False):
+    data = {
+        ""
+    }
+    ax = CGFigure(size, title=title, boundary=boundary, axis='WeekAxis')
+    ref = ax.rangebar(data['data']['time'], data['data']['value'])
+    graph = ax.render()
+    return graph

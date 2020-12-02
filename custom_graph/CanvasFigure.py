@@ -62,6 +62,9 @@ class CanvasFigure(Flowable):
         self.setYLabel("Blood Pressure")
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
         # canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
-        data = generator.GenerateData()
+        from datetime import datetime
+        start = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
+        end = datetime(year=2000, month=1, day=1, hour=23, minute=59, second=59, microsecond=999999).timestamp()
+        data = generator.GenerateData(start, end)
         flowable = BPGraph(data, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))

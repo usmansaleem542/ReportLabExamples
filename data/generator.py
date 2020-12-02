@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import json
 from datetime import datetime
-
 # np.random.seed(5)
 
 def get_Point2Pixel(x1, x2, y1, y2, point):
@@ -16,10 +15,8 @@ def gen(x, scale, offset, mult=100):
     dt = (dt * mult) + abs(min(dt)*mult)
     return np.round(dt) + offset
 
-def GenerateData(filename='ignore/sample_data2.json', offset = 50, randomN = False):
+def GenerateData(start, end, filename='ignore/sample_data2.json', offset = 50, randomN = False):
     # dt = datetime.now()
-    start = datetime(year=2000, month= 1, day= 1, hour=0, minute=0, second=0, microsecond=0).timestamp()
-    end = datetime(year=2000, month= 1, day= 1, hour=23, minute=59, second=59, microsecond=999999).timestamp()
     dataBP = {"title": "Blood Pressure Graph", "xLabel": "Time", "yLabel": "Blood Pressure",
               "normal_range": [50, 200],
               "data": { "time": [], "value": [], "Q1": [], "Q2": [] }}

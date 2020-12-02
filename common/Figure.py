@@ -5,12 +5,13 @@ import sys
 
 
 class CGFigure:
-    def __init__(self, figure_size, title=None, xlabel=None, ylabel=None, boundary=False):
+    def __init__(self, figure_size, title=None, xlabel=None, ylabel=None, boundary=False, axis='Axis'):
         self.FigSize = figure_size
         self.Title = title
         self.xLabel = xlabel
         self.yLabel = ylabel
         self.Boundary = boundary
+        self.Axis = axis
         self.Plots = []
         self.DataStats = {'xMin': sys.maxsize, "xMax": -sys.maxsize, "yMin": sys.maxsize, "yMax": -sys.maxsize}
         self.xAxisDataFormator = None
