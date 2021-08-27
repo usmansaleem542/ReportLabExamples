@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import json
+import os
 from datetime import datetime
 # np.random.seed(5)
 
@@ -45,6 +46,7 @@ def GenerateData(start, end, filename='ignore/sample_data2.json', offset = 50, r
     data["Q2"] = list(df.Q2)
 
     # print(df.head())
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as f:
         f.write(json.dumps(dataBP, indent=4))
         f.close()
