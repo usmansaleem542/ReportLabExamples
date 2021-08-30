@@ -158,4 +158,4 @@ class LineGraph(Flowable):
         Draw the shape, text, etc
         """
         self.Figure(grid=True)
-        canv_utils.drawLine(self.canv, self.mDataX, self.mDataY, stroke=1)
+        canv_utils.drawLine(self.canv, self.mDataX, self.mDataY, line_width=0.8, stroke=1)

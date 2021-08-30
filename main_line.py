@@ -12,10 +12,9 @@ def get_values(index):
     with open('line_data.json', 'r') as f:
         line_graph = json.loads(f.read())
 
-    print(len(line_graph))
     dt = pd.DataFrame(line_graph[index]['data'])
     data = {'title': 'Monday', 'xLabel': 'Time', 'yLabel': 'Blood Pressure', 'data': {}}
-    data['data']['time'] = dt.value_x_axis.values
+    data['data']['time'] = dt.value_x_axis.values - 18000
     data['data']['value'] = dt.value_y_axis.values
 
     return data

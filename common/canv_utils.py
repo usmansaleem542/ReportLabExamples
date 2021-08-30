@@ -69,7 +69,7 @@ def DrawCustomFlowable(canv, flowable, xy, availableWH):
     flowable.drawOn(canv, *xy)
 
 
-def drawLine(canv, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1, style=None):
+def drawLine(canv, x, y, color=(0, 0, 1, 0.4), fill=0, stroke=1, line_width=2, style=None):
     if len(x) != len(y):
         return
 
@@ -78,7 +78,7 @@ def drawLine(canv, x, y, color= (0, 0, 1, 0.4), fill=0, stroke=1, style=None):
         canv.setStrokeColor(Color(*color))
         canv.setDash(6, 4)
     canv.setFillColor(Color(*color))
-    canv.setLineWidth(2)  # small lines
+    canv.setLineWidth(line_width)  # small lines
     canv.setLineCap(1)
     canv.setLineJoin(1)
     p = canv.beginPath()
