@@ -1,6 +1,7 @@
 from reportlab.platypus import Flowable
 
 from data import generator
+from datetime import datetime
 from common import canv_utils as canv_utils
 from custom_graph.BPGraph import BPGraph
 
@@ -13,14 +14,10 @@ class CanvasFigure(Flowable):
         self.dataX = dataX
         self.dataY = dataY
         self.Padding = {"left": 50, "right": 50, "top":50, "bottom": 50}
-        self.Init()
-
-    def Init(self):
         self.pX = self.Padding['left']
         self.pY = self.Padding['bottom']
         self.pHeight = self.height - (self.Padding['top'] + self.Padding['bottom'])
         self.pWidth = self.width - (self.Padding['left'] + self.Padding['right'])
-
 
     def wrap(self, availWidth, availHeight):
         # print("w,h ", availWidth, availHeight)
@@ -62,7 +59,6 @@ class CanvasFigure(Flowable):
         self.setYLabel("Blood Pressure")
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
         # canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
-        from datetime import datetime
         start = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
         end = datetime(year=2000, month=1, day=1, hour=23, minute=59, second=59, microsecond=999999).timestamp()
         data = generator.GenerateData(start, end)
