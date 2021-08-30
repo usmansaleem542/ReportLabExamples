@@ -20,7 +20,7 @@ start = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0, microsec
 end = datetime(year=2000, month=1, day=2, hour=23, minute=59, second=59, microsecond=999999).timestamp()
 
 data = generator.GenerateData(start, end)
-graph = graphP.GetLineGraph(data, (500, 250), boundary=True)
+graph = graphP.GetBloodGlucoseGraph(data, (500, 250), boundary=True)
 
 # graph = graphP.GetRangeBarGraph(data, (500, 250), boundary=True)
 
