@@ -3,14 +3,17 @@ import numpy as np
 from datetime import datetime
 from collections import OrderedDict
 
+
 def dataXFormater(val):
     val = str(datetime.fromtimestamp(val).strftime('%I %P') + "---")
     return val
+
 
 def dataYFormater(val):
     number_string = hex(val)
 
     return "".join(number_string)
+
 
 def GetBloodGlucoseGraph(data, size, title="Graph Title", xlabel='Time', ylabel="Blood Sugar", boundary=False):
     ti = [data['data']['time'][0], data['data']['time'][-1]]
@@ -27,6 +30,7 @@ def GetBloodGlucoseGraph(data, size, title="Graph Title", xlabel='Time', ylabel=
     ax.plotrange(data['normal_range'])
     graph = ax.render()
     return graph
+
 
 def GetWeekGraph(data, size, title="Bar Graph Title", boundary=False):
     data = {
