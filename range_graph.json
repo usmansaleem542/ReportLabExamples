@@ -1,0 +1,37 @@
+[
+  {
+    "range": "Below 54",
+    "category": "Very Low",
+    "target": 20,
+    "actual": 1,
+    "duration": 2340
+  },
+  {
+    "range": "54 - 69",
+    "category": "Low",
+    "target": 4,
+    "actual": 4,
+    "duration": 4320
+  },
+  {
+    "range": "70 - 180",
+    "category": "Target Range",
+    "target": 51,
+    "actual": 65,
+    "duration": 1064700
+  },
+  {
+    "range": "181 - 250",
+    "category": "High",
+    "target": 25,
+    "actual": 20,
+    "duration": 55260
+  },
+  {
+    "range": "Above 250",
+    "category": "Very High",
+    "target": 0,
+    "actual": 10,
+    "duration": 0
+  }
+]

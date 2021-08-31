@@ -2,18 +2,21 @@ from reportlab.graphics.charts.axes import Color
 from reportlab.pdfbase import pdfmetrics
 import math
 
+
 def Point2Pixel(x1, x2, y1, y2, point):
     slope = (y2 - y1) / (x2 - x1)
     pixVal = y1 + slope * (point - x1)
     return pixVal
 
-def DrawLine(canv, xy, wh, color=(0 ,0 ,0 ,1)):
+
+def DrawLine(canv, xy, wh, color=(0, 0, 0, 1)):
     canv.saveState()
     canv.setStrokeColor(Color(*color))
     canv.line(*xy, *wh)
     canv.restoreState()
 
-def DrawRectangle(canv, xy, wh, stroke_color = (0.1, 0.1, 0.1, 0.9), color=(0.8, 0.1, 0.1, 0.9), fill=0, stroke=1):
+
+def DrawRectangle(canv, xy, wh, stroke_color=(0.1, 0.1, 0.1, 0.9), color=(0.8, 0.1, 0.1, 0.9), fill=0, stroke=1):
     canv.saveState()
     canv.setStrokeColor(Color(*stroke_color))
     canv.setFillColor(Color(*color))
@@ -23,6 +26,7 @@ def DrawRectangle(canv, xy, wh, stroke_color = (0.1, 0.1, 0.1, 0.9), color=(0.8,
     p.close()
     canv.restoreState()
 
+
 def GetFontWidhHeight(txt, font_name, font_size):
     face = pdfmetrics.getFont(font_name).face
     ascent = (face.ascent * font_size) / 1000.0
@@ -31,6 +35,7 @@ def GetFontWidhHeight(txt, font_name, font_size):
     height = ascent + descent
     width = pdfmetrics.stringWidth(txt, font_name, font_size)
     return width, height
+
 
 def GetRotFontWidhHeight(canv, rot, txt, font_name, font_size):
     canv.saveState()
@@ -45,20 +50,39 @@ def GetRotFontWidhHeight(canv, rot, txt, font_name, font_size):
     canv.restoreState()
     return w, h
 
-def WriteText(canv, txt, x, y, rot=0):
+
+def WriteText(canv, txt, x, y, rot=0, font_size=None):
+    if font_size is None:
+        font_size = canv._fontsize
+
+    canv.saveState()
+    canv.translate(x, y)
+    canv.setFontSize(font_size)
+    canv.rotate(rot)
+    # canv.setFont(canv._fontname, font_size)
+    canv.drawRightString(0, 0, str(txt))
+    canv.restoreState()
+
+
+def WriteLeftAlignedText(canv, txt, x, y, rot=0, font_size=None):
+    if font_size is None:
+        font_size = canv._fontsize
+
     canv.saveState()
     canv.translate(x, y)
     canv.rotate(rot)
-    canv.drawRightString(0, 0, str(txt))
+    canv.setFontSize(font_size)
+    canv.drawString(0, 0, str(txt))
     canv.restoreState()
+
 
 def WriteCenteredText(canv, txt, x, y, rot=-45):
     w, h = GetRotFontWidhHeight(canv, rot, txt, canv._fontname, canv._fontsize)
     canv.saveState()
     if rot < 0:
-        canv.translate(x + (w/2), y-(h/2))
+        canv.translate(x + (w / 2), y - (h / 2))
     else:
-        canv.translate(x + (w/2), y+(h/2))
+        canv.translate(x + (w / 2), y + (h / 2))
     canv.rotate(rot)
     canv.drawRightString(0, 0, str(txt))
     canv.restoreState()
@@ -82,7 +106,7 @@ def drawLine(canv, x, y, color=(0, 0, 1, 0.4), fill=0, stroke=1, line_width=2, s
     canv.setLineCap(1)
     canv.setLineJoin(1)
     p = canv.beginPath()
-    p.moveTo(x[0] , y[0])
+    p.moveTo(x[0], y[0])
     for i in range(len(x)):
         p.lineTo(x[i], y[i])
 
