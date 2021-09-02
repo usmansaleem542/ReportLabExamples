@@ -9,10 +9,10 @@ def Point2Pixel(x1, x2, y1, y2, point):
     return pixVal
 
 
-def DrawLine(canv, xy, wh, color=(0, 0, 0, 1)):
+def DrawLine(canv, loc_from, loc_to, color=(0, 0, 0, 1)):
     canv.saveState()
     canv.setStrokeColor(Color(*color))
-    canv.line(*xy, *wh)
+    canv.line(*loc_from, *loc_to)
     canv.restoreState()
 
 
