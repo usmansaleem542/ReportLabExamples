@@ -48,14 +48,13 @@ class RangeGraph(Flowable):
             center_of_graph = -(y - current) + (height / 2)
 
             canv_utils.DrawLine(self.canv, (x - font_size - 18, text_vloc), (x, center_of_graph), color=self.Colors[i])
-            canv_utils.WriteText(self.canv, self.data.iloc[i].range,
-                                 x=x - font_size - 20, y=text_vloc,
+            canv_utils.WriteText(self.canv, self.data.iloc[i].range, x=x - font_size - 20, y=text_vloc,
                                  rot=-0, font_size=font_size)
 
-            canv_utils.DrawLine(self.canv, (x + self.width, center_of_graph), (x + font_size + self.width + 18, text_vloc), color=self.Colors[i])
+            canv_utils.DrawLine(self.canv, (x + self.width, center_of_graph),
+                                (x + font_size + self.width + 18, text_vloc), color=self.Colors[i])
             canv_utils.WriteLeftAlignedText(self.canv, self.data.iloc[i].category, x=x + font_size + self.width + 20,
-                                            y=text_vloc,
-                                            rot=-0, font_size=font_size)
+                                            y=text_vloc, rot=-0, font_size=font_size)
 
             canv_utils.DrawRectangle(self.canv, (x, -(y - current)), (self.width, height),
                                      fill=1, stroke=0, color=self.Colors[i])
