@@ -41,8 +41,6 @@ class RangeGraph(Flowable):
     def DrawActual(self, x, y, border=False):
         current = 0
         font_size = 10
-        if border:
-            canv_utils.DrawRectangle(self.canv, (x, -y), (self.width, self.height))
 
         for i in range(len(self.data)):
             height = self.height * (self.data.iloc[i].actual / 100)
@@ -54,7 +52,7 @@ class RangeGraph(Flowable):
                                  x=x - font_size - 20, y=text_vloc,
                                  rot=-0, font_size=font_size)
 
-            canv_utils.DrawLine(self.canv, (x + self.width, center_of_graph), (x + font_size + self.width + 20, text_vloc), color=self.Colors[i])
+            canv_utils.DrawLine(self.canv, (x + self.width, center_of_graph), (x + font_size + self.width + 18, text_vloc), color=self.Colors[i])
             canv_utils.WriteLeftAlignedText(self.canv, self.data.iloc[i].category, x=x + font_size + self.width + 20,
                                             y=text_vloc,
                                             rot=-0, font_size=font_size)
@@ -62,6 +60,9 @@ class RangeGraph(Flowable):
             canv_utils.DrawRectangle(self.canv, (x, -(y - current)), (self.width, height),
                                      fill=1, stroke=0, color=self.Colors[i])
             current += height
+
+        if border:
+            canv_utils.DrawRectangle(self.canv, (x, -y), (self.width, self.height))
 
     def draw(self):
         """
