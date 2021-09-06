@@ -35,6 +35,14 @@ class RangeGraph(Flowable):
     def InitStats(self):
         self.Stats['xAxis'] = {}
         self.Stats['yAxis'] = {}
+        self.Stats['xAxis']['min'] = 0
+        self.Stats['xAxis']['max'] = len(self.data)
+        self.Stats['yAxis']['min'] = 0
+        self.Stats['yAxis']['max'] = 100
+        self.Stats['xAxis']['major_size'] = self.width / len(self.data)
+        for i in range(len(self.data)):
+            row = self.data.iloc[i]
+            self.Stats['yAxis']['max'] = max(self.Stats['yAxis']['max'], row.actual, row.target)
 
     def wrap(self, available_width, available_height):
         self.aw = available_width

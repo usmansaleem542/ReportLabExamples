@@ -2,36 +2,36 @@
   {
     "range": "Below 54",
     "category": "Very Low",
-    "target": 20,
-    "actual": 1,
-    "duration": 2340
+    "target": 1,
+    "actual": 0.0,
+    "duration": 0
   },
   {
     "range": "54 - 69",
     "category": "Low",
     "target": 4,
-    "actual": 4,
-    "duration": 4320
+    "actual": 0.38,
+    "duration": 5040
   },
   {
     "range": "70 - 180",
     "category": "Target Range",
-    "target": 51,
-    "actual": 65,
-    "duration": 1064700
+    "target": 70,
+    "actual": 99.23,
+    "duration": 1329480
   },
   {
     "range": "181 - 250",
     "category": "High",
     "target": 25,
-    "actual": 20,
-    "duration": 55260
+    "actual": 0.39,
+    "duration": 5220
   },
   {
     "range": "Above 250",
     "category": "Very High",
-    "target": 0,
-    "actual": 10,
+    "target": 5,
+    "actual": 0.0,
     "duration": 0
   }
 ]
