@@ -1,130 +1,19 @@
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import (Flowable)
-from reportlab.graphics.charts.axes import Color
+from reportlab.platypus import Flowable
 
-from common import canv_utils
-
-
-class BarGraphC(Flowable):
-    def __init__(self, data, width=500, height=200):
-        Flowable.__init__(self)
-        self.Stats = {}
-        self.data = data
-        self.width = width
-        self.height = height
-        self.styles = getSampleStyleSheet()
-        self.aw = 0
-        self.ah = 0
-        self.InitStats()
-        self.Colors = [(0.7, 0.0, 0.0, 0.9), (0.9, 0.20, 0.25, 0.9), (0.45, 0.7, 0.35, 0.9),
-                       (0.9, 0.8, 0.15, 0.9), (0.9, 0.55, 0.15, 0.9)]
-
-    def InitStats(self):
-        self.Stats['xAxis'] = {}
-        self.Stats['yAxis'] = {}
-        self.Stats['xAxis']['min'] = 0
-        self.Stats['xAxis']['max'] = len(self.data)
-        self.Stats['yAxis']['min'] = 0
-        self.Stats['yAxis']['max'] = 100
-        self.Stats['xAxis']['major_size'] = self.width / len(self.data)
-        for i in range(len(self.data)):
-            row = self.data.iloc[i]
-            self.Stats['yAxis']['max'] = max(self.Stats['yAxis']['max'], row.actual, row.target)
-
-    def wrap(self, available_width, available_height):
-        self.aw = available_width
-        self.ah = available_height
-        return self.width, self.height + 50
-
-    def DrawVGrid(self, grid=False):
-        colsVals = list(range(0, len(self.data.category), 1))
-        minV = self.Stats['xAxis']['min']
-        maxV = self.Stats['xAxis']['max']
-        w, h = canv_utils.GetFontWidhHeight('12', self.canv._fontname, self.canv._fontsize)
-        pixel_pos = []
-        for colV in colsVals:
-            posX = canv_utils.Point2Pixel(minV, maxV, 0, self.width, colV)
-            pos = [posX, -(h * 2)]
-            if grid: self.canv.line(pos[0], -(h / 3), pos[0], self.height)
-            labelStr = self.data.iloc[colV].category
-            pixel_pos.append(pos + [labelStr])
-        pixel_pos.append([self.width, 0, ''])
-
-        for i in range(len(pixel_pos)-1):
-            pos = pixel_pos[i]
-            str_w, str_h = canv_utils.GetFontWidhHeight(pos[2], self.canv._fontname, self.canv._fontsize)
-            diff = pixel_pos[i+1][0] - pos[0]
-            self.canv.drawString(pos[0] + (diff-str_w)/2, pos[1], pos[2])
-
-    def DrawHGrid(self, grid):
-        minV = self.Stats['yAxis']['min']
-        maxV = self.Stats['yAxis']['max']
-        rows = list(range(0, maxV+1, 20))
-
-        w, h = canv_utils.GetFontWidhHeight('120', self.canv._fontname, self.canv._fontsize)
-
-        for rowV in rows:
-            posY = canv_utils.Point2Pixel(minV, maxV, 0, self.height, rowV)
-            pos = [-h * 3, posY]
-            if grid: self.canv.line(-(h / 3), pos[1], self.width, pos[1])
-            self.canv.drawString(pos[0], pos[1] - (h / 3), str(rowV))
-
-    def Figure(self, grid=False):
-        canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height), stroke_color=(0.1, 0.1, 0.1, 0.3))
-        self.canv.saveState()
-        self.canv.setStrokeColor(Color(0.1, 0.1, 0.1, 0.3))
-        self.canv.setFontSize(10)
-        self.DrawVGrid(grid)
-        self.DrawHGrid(grid)
-        self.canv.restoreState()
-
-    def draw(self):
-        """
-        Draw the shape, text, etc
-        """
-        self.Figure(grid=True)
-        area = self.Stats['xAxis']['major_size']
-        padding = 0.07
-        center_space = 0.07
-        padding_size = padding*area
-        center_size = center_space*area
-        bar_size = (area - (padding_size*2 + center_size))/2
-
-        self.canv.saveState()
-        self.canv.setFontSize(10)
-        for i in range(len(self.data)):
-            data_row = self.data.iloc[i]
-            actual = canv_utils.Point2Pixel(0, self.Stats['yAxis']['max'], 0, self.height, max(data_row.actual, 0.2))
-            target = canv_utils.Point2Pixel(0, self.Stats['yAxis']['max'], 0, self.height, max(data_row.target, 0.2))
-            xy = (padding_size + area * i, 0)
-            wh = (bar_size, actual)
-
-            xy2 = (padding_size + center_size + bar_size + area * i, 0)
-            wh2 = (bar_size, target)
-
-            print("XY: ", xy)
-            print("WH: ", wh)
-            print("bar_size: ", bar_size, "padding_size: ", padding_size, "center_size",  center_size)
-            # Actual Bar
-            w_txt, h_txt = canv_utils.GetFontWidhHeight(f"{data_row.actual}%", self.canv._fontname, self.canv._fontsize)
-            canv_utils.DrawRectangle(self.canv, xy, wh, fill=1, color=self.Colors[i], stroke=0)
-            canv_utils.WriteText(self.canv, f"{data_row.actual}%", xy[0]+wh[0]/2 + w_txt/2, wh[1]/2, rot=0)
-
-            # Target Bar
-            w_txt, h_txt = canv_utils.GetFontWidhHeight(f"{data_row.target}%", self.canv._fontname, self.canv._fontsize)
-            canv_utils.DrawRectangle(self.canv, xy2, wh2, fill=1, color=self.Colors[i], stroke=0)
-            canv_utils.WriteText(self.canv, f"{data_row.target}%", xy2[0]+wh2[0]/2 + w_txt/2, wh2[1]/2, rot=0)
-
-        self.canv.restoreState()
+from data import generator
+from datetime import datetime
+from common import canv_utils as canv_utils
+from custom_graph.BPGraph import BPGraph
 
 
-class BarGraph(Flowable):
-    def __init__(self, data, width=600, height=500):
+class CanvasFigure(Flowable):
+    def __init__(self, dataX, dataY, width=600, height=500):
         Flowable.__init__(self)
         self.width = width
         self.height = height
-        self.data = data
-        self.Padding = {"left": 0, "right": 0, "top":20, "bottom": 0}
+        self.dataX = dataX
+        self.dataY = dataY
+        self.Padding = {"left": 50, "right": 50, "top":50, "bottom": 50}
         self.pX = self.Padding['left']
         self.pY = self.Padding['bottom']
         self.pHeight = self.height - (self.Padding['top'] + self.Padding['bottom'])
@@ -165,8 +54,13 @@ class BarGraph(Flowable):
         """
         Draw the shape, text, etc
         """
-        self.setTitle("T: Target | A: Actual")
-        # self.setXlabel("Time")
-        # self.setYLabel("Blood Pressure")
-        flowable = BarGraphC(self.data, width=self.pWidth, height=self.pHeight)
+        self.setTitle("--- Blood Pressure Graph ---")
+        self.setXlabel("Time")
+        self.setYLabel("Blood Pressure")
+        canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
+        # canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
+        start = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
+        end = datetime(year=2000, month=1, day=1, hour=23, minute=59, second=59, microsecond=999999).timestamp()
+        data = generator.GenerateData(start, end)
+        flowable = BPGraph(data, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
