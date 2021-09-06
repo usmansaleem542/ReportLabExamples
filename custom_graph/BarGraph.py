@@ -37,17 +37,17 @@ class BarGraphC(Flowable):
         return self.width, self.height + 50
 
     def DrawVGrid(self, grid=False):
-        colsVals = list(range(0, len(self.data.category), 1))
-        minV = self.Stats['xAxis']['min']
-        maxV = self.Stats['xAxis']['max']
+        cols_vals = list(range(0, len(self.data.category), 1))
+        min_v = self.Stats['xAxis']['min']
+        max_v = self.Stats['xAxis']['max']
         w, h = canv_utils.GetFontWidhHeight('12', self.canv._fontname, self.canv._fontsize)
         pixel_pos = []
-        for colV in colsVals:
-            posX = canv_utils.Point2Pixel(minV, maxV, 0, self.width, colV)
-            pos = [posX, -(h * 2)]
+        for colV in cols_vals:
+            pos_x = canv_utils.Point2Pixel(min_v, max_v, 0, self.width, colV)
+            pos = [pos_x, -(h * 2)]
             if grid: self.canv.line(pos[0], -(h / 3), pos[0], self.height)
-            labelStr = self.data.iloc[colV].category
-            pixel_pos.append(pos + [labelStr])
+            label_str = self.data.iloc[colV].category
+            pixel_pos.append(pos + [label_str])
         pixel_pos.append([self.width, 0, ''])
 
         for i in range(len(pixel_pos)-1):
@@ -57,15 +57,15 @@ class BarGraphC(Flowable):
             self.canv.drawString(pos[0] + (diff-str_w)/2, pos[1], pos[2])
 
     def DrawHGrid(self, grid):
-        minV = self.Stats['yAxis']['min']
-        maxV = self.Stats['yAxis']['max']
-        rows = list(range(0, maxV+1, 20))
+        min_v = self.Stats['yAxis']['min']
+        max_v = self.Stats['yAxis']['max']
+        rows = list(range(0, max_v+1, 20))
 
         w, h = canv_utils.GetFontWidhHeight('120', self.canv._fontname, self.canv._fontsize)
 
         for rowV in rows:
-            posY = canv_utils.Point2Pixel(minV, maxV, 0, self.height, rowV)
-            pos = [-h * 3, posY]
+            pos_y = canv_utils.Point2Pixel(min_v, max_v, 0, self.height, rowV)
+            pos = [-h * 3, pos_y]
             if grid: self.canv.line(-(h / 3), pos[1], self.width, pos[1])
             self.canv.drawString(pos[0], pos[1] - (h / 3), str(rowV))
 
@@ -102,9 +102,9 @@ class BarGraphC(Flowable):
             xy2 = (padding_size + center_size + bar_size + area * i, 0)
             wh2 = (bar_size, target)
 
-            print("XY: ", xy)
-            print("WH: ", wh)
-            print("bar_size: ", bar_size, "padding_size: ", padding_size, "center_size",  center_size)
+            # print("XY: ", xy)
+            # print("WH: ", wh)
+            # print("bar_size: ", bar_size, "padding_size: ", padding_size, "center_size",  center_size)
             # Actual Bar
             w_txt, h_txt = canv_utils.GetFontWidhHeight(f"{data_row.actual}%", self.canv._fontname, self.canv._fontsize)
             canv_utils.DrawRectangle(self.canv, xy, wh, fill=1, color=self.Colors[i], stroke=0)
