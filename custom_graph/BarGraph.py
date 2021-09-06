@@ -91,7 +91,8 @@ class BarGraphC(Flowable):
         bar_size = (area - (padding_size*2 + center_size))/2
 
         self.canv.saveState()
-        self.canv.setFontSize(10)
+        self.canv.setFontSize(8)
+        self.canv.setFillColorRGB(0.2, 0.2, 0.2, 1.0)
         for i in range(len(self.data)):
             data_row = self.data.iloc[i]
             actual = canv_utils.Point2Pixel(0, self.Stats['yAxis']['max'], 0, self.height, max(data_row.actual, 0.2))
@@ -106,14 +107,14 @@ class BarGraphC(Flowable):
             # print("WH: ", wh)
             # print("bar_size: ", bar_size, "padding_size: ", padding_size, "center_size",  center_size)
             # Actual Bar
-            w_txt, h_txt = canv_utils.GetFontWidhHeight(f"{data_row.actual}%", self.canv._fontname, self.canv._fontsize)
+            w_txt, h_txt = canv_utils.GetFontWidhHeight(f"A: {data_row.actual}%", self.canv._fontname, self.canv._fontsize)
             canv_utils.DrawRectangle(self.canv, xy, wh, fill=1, color=self.Colors[i], stroke=0)
-            canv_utils.WriteText(self.canv, f"{data_row.actual}%", xy[0]+wh[0]/2 + w_txt/2, wh[1]/2, rot=0)
+            canv_utils.WriteText(self.canv, f"A: {data_row.actual}%", xy[0]+wh[0]/2 + w_txt/2, wh[1]/2, rot=0)
 
             # Target Bar
-            w_txt, h_txt = canv_utils.GetFontWidhHeight(f"{data_row.target}%", self.canv._fontname, self.canv._fontsize)
+            w_txt, h_txt = canv_utils.GetFontWidhHeight(f"T: {data_row.target}%", self.canv._fontname, self.canv._fontsize)
             canv_utils.DrawRectangle(self.canv, xy2, wh2, fill=1, color=self.Colors[i], stroke=0)
-            canv_utils.WriteText(self.canv, f"{data_row.target}%", xy2[0]+wh2[0]/2 + w_txt/2, wh2[1]/2, rot=0)
+            canv_utils.WriteText(self.canv, f"T: {data_row.target}%", xy2[0]+wh2[0]/2 + w_txt/2, wh2[1]/2, rot=0)
 
         self.canv.restoreState()
 
@@ -154,6 +155,7 @@ class BarGraph(Flowable):
 
     def setTitle(self, txt):
         self.canv.saveState()
+        self.canv.setFillColorRGB(0.4, 0.4, 0.4, 1.0)
         w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
         x = (self.pWidth/2) + (w/2)+self.Padding['left']
 
