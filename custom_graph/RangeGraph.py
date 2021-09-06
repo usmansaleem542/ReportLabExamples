@@ -33,16 +33,10 @@ class RangeGraph(Flowable):
         self.InitStats()
 
     def InitStats(self):
-        self.Stats['xAxis'] = {}
-        self.Stats['yAxis'] = {}
-        self.Stats['xAxis']['min'] = 0
-        self.Stats['xAxis']['max'] = len(self.data)
-        self.Stats['yAxis']['min'] = 0
-        self.Stats['yAxis']['max'] = 100
-        self.Stats['xAxis']['major_size'] = self.width / len(self.data)
+        self.Stats['target'] = {'sum': 0}
         for i in range(len(self.data)):
-            row = self.data.iloc[i]
-            self.Stats['yAxis']['max'] = max(self.Stats['yAxis']['max'], row.actual, row.target)
+            dt = self.data.iloc[i]
+            self.Stats['target']['sum'] += dt.target
 
     def wrap(self, available_width, available_height):
         self.aw = available_width
@@ -82,7 +76,7 @@ class RangeGraph(Flowable):
 
         canv_utils.WriteText(self.canv, "Target", x=x+35, y=y+70, rot=-0, font_size=15)
         for i in range(len(self.data)):
-            height = self.height * (self.data.iloc[i].target / 100)
+            height = self.height * (self.data.iloc[i].target / self.Stats['target']['sum'])
             text_vloc = -(y - (self.height * self.TextPos[i]))
             center_of_graph = -(y - current) + (height / 2)
 
