@@ -7,7 +7,8 @@ from common import canv_utils
 import numpy as np
 import math
 
-class BPGraph(Flowable):
+
+class BPAreaGraph(Flowable):
     def __init__(self, data, width=500, height=200):
         Flowable.__init__(self)
         self.Stats = {}
@@ -42,54 +43,53 @@ class BPGraph(Flowable):
         self.ah = availHeight
         return self.width, self.height + 50
 
-
     def GetHorizontalPosition(self, minLimit=0, maxLimit=24, step=3):
-        minTime = min(self.dataX)
-        start = int(datetime.fromtimestamp(minTime).hour / step) * step
-        endDT = datetime.fromtimestamp(max(self.dataX))
-        end = math.ceil((endDT.hour + (endDT.minute/60)) / step) * step
+        min_time = min(self.dataX)
+        start = int(datetime.fromtimestamp(min_time).hour / step) * step
+        end_dt = datetime.fromtimestamp(max(self.dataX))
+        end = math.ceil((end_dt.hour + (end_dt.minute / 60)) / step) * step
 
         if end <= start:
             print("There Issue in Given Data For X Axis")
             exit()
         if start == minLimit:
-            timeD = time.min
+            time_d = time.min
         else:
-            timeD = time(hour=start)
-        minTime = datetime.combine(datetime.fromtimestamp(minTime).date(), timeD)
+            time_d = time(hour=start)
+        min_time = datetime.combine(datetime.fromtimestamp(min_time).date(), time_d)
 
         if end == maxLimit:
-            timeD = time.max
+            time_d = time.max
         else:
-            timeD = time(hour=end, second=0, microsecond=0)
-        maxTime = datetime.combine(minTime.date(), timeD)
+            time_d = time(hour=end, second=0, microsecond=0)
+        max_time = datetime.combine(min_time.date(), time_d)
 
         # print("X Min: ", minTime)
         # print("X Max: ", maxTime)
 
-        self.Stats['xAxis']['min'] = minTime.timestamp()
-        self.Stats['xAxis']['max'] = maxTime.timestamp()
-        self.Stats['xAxis']['pos'] = list(range(start, end+1, step))
+        self.Stats['xAxis']['min'] = min_time.timestamp()
+        self.Stats['xAxis']['max'] = max_time.timestamp()
+        self.Stats['xAxis']['pos'] = list(range(start, end + 1, step))
 
     def GetVerticalPosition(self, minLimit=None, maxLimit=None, step=50):
-        maxV = max(max(self.dataY), np.array(self.Q1).max(), np.array(self.Q2).max(), max(self.NormalRange))
-        minV= min(min(self.dataY), np.array(self.Q1).min(), np.array(self.Q2).min(), min(self.NormalRange))
-        minV = math.floor(minV/step)*step
+        max_v = max(max(self.dataY), np.max(self.Q1), np.max(self.Q2), max(self.NormalRange))
+        min_v = min(min(self.dataY), np.min(self.Q1), np.min(self.Q2), min(self.NormalRange))
+        min_v = math.floor(min_v / step) * step
         if minLimit is not None:
-            minV = min(minLimit, minV)
+            min_v = min(minLimit, min_v)
 
-        maxV = math.ceil(maxV/step)*step
+        max_v = math.ceil(max_v / step) * step
         if maxLimit is not None:
-            minV = min(maxLimit, maxV)
+            min_v = min(maxLimit, max_v)
 
-        if minV == maxV:
+        if min_v == max_v:
             print("There Issue in Given Data For Y Axis")
             exit()
 
-        self.Stats['yAxis']['min'] = minV
-        self.Stats['yAxis']['max'] = maxV
-        step =  math.ceil(((maxV - minV)*.10)/50) * 50
-        self.Stats['yAxis']['pos'] = list(range(minV, maxV+1, step))
+        self.Stats['yAxis']['min'] = min_v
+        self.Stats['yAxis']['max'] = max_v
+        step = math.ceil(((max_v - min_v) * .10) / 50) * 50
+        self.Stats['yAxis']['pos'] = list(range(min_v, max_v + 1, step))
 
     def DrawVGrid(self, grid=False):
         cols = self.Stats['xAxis']['pos']
@@ -104,10 +104,10 @@ class BPGraph(Flowable):
             newT = datetime.combine(minTime.date(), timeD)
             posX = canv_utils.Point2Pixel(minTime.timestamp(), maxTime.timestamp(), 0, self.width, newT.timestamp())
             # print(newT, posX, self.width)
-            pos = [posX, -(h*2)]
-            if grid: self.canv.line(pos[0], -(h/3), pos[0], self.height)
+            pos = [posX, -(h * 2)]
+            if grid: self.canv.line(pos[0], -(h / 3), pos[0], self.height)
             labelStr = newT.strftime('%I %P')
-            self.canv.drawString(pos[0] - (h*1.2), pos[1], labelStr)
+            self.canv.drawString(pos[0] - (h * 1.2), pos[1], labelStr)
 
     def DrawHGrid(self, grid):
         rows = self.Stats['yAxis']['pos']
@@ -118,11 +118,11 @@ class BPGraph(Flowable):
 
         for rowV in rows:
             posY = canv_utils.Point2Pixel(minV, maxV, 0, self.height, rowV)
-            pos = [-h*3, posY]
-            if grid: self.canv.line(-(h/3), pos[1], self.width, pos[1])
+            pos = [-h * 3, posY]
+            if grid: self.canv.line(-(h / 3), pos[1], self.width, pos[1])
             # yVal = round(canv_utils.Point2Pixel(0, self.height, min(self.dataY), max(self.dataY), pos[1]))
             # vPos.append(pos)
-            self.canv.drawString(pos[0], pos[1] - (h/3), str(rowV))
+            self.canv.drawString(pos[0], pos[1] - (h / 3), str(rowV))
 
     def Figure(self, grid=False):
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
@@ -162,32 +162,35 @@ class BPGraph(Flowable):
 
         return newData
 
-    def DrawNormalRange(self, txt = "Normal Range"):
-        rangeLow = canv_utils.Point2Pixel(self.Stats['yAxis']['min'], self.Stats['yAxis']['max'], 0, self.height, self.NormalRange[0])
-        rangeHigh = canv_utils.Point2Pixel(self.Stats['yAxis']['min'], self.Stats['yAxis']['max'], 0, self.height, self.NormalRange[1])
+    def DrawNormalRange(self, txt="Normal Range"):
+        range_low = canv_utils.Point2Pixel(self.Stats['yAxis']['min'],
+                                           self.Stats['yAxis']['max'], 0, self.height, self.NormalRange[0])
+
+        range_high = canv_utils.Point2Pixel(self.Stats['yAxis']['min'], self.Stats['yAxis']['max'],
+                                            0, self.height, self.NormalRange[1])
 
         self.canv.saveState()
-        clr = np.array([3, 125, 80, 125])/255
+        clr = np.array([3, 125, 80, 125]) / 255
         self.canv.setStrokeColor(Color(*clr))
         w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
         self.canv.setLineWidth(2)  # small lines
-        self.canv.line(0, rangeLow, self.width+h, rangeLow)
-        self.canv.line(0, rangeHigh, self.width+h, rangeHigh)
+        self.canv.line(0, range_low, self.width + h, range_low)
+        self.canv.line(0, range_high, self.width + h, range_high)
 
-        diff = abs(rangeLow - rangeHigh)
+        diff = abs(range_low - range_high)
 
-        fontSize = min(10, max(5, int(diff*0.12)))  # Calculating Suitable Font Size between 7-12 according to Range Difference
+        font_size = min(10, max(5, int(
+            diff * 0.12)))  # Calculating Suitable Font Size between 7-12 according to Range Difference
 
-        self.canv.setFontSize(fontSize)
+        self.canv.setFontSize(font_size)
         w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
-        y = rangeLow + (diff - w)/2
+        y = range_low + (diff - w) / 2
         canv_utils.WriteText(self.canv, txt, x=self.width + h, y=y, rot=-90)
         self.canv.setFontSize(8)
         w, h = canv_utils.GetFontWidhHeight(txt, self.canv._fontname, self.canv._fontsize)
-        canv_utils.WriteText(self.canv, self.NormalRange[0], self.width + (h * 4), rangeLow - (h / 2))
-        canv_utils.WriteText(self.canv, self.NormalRange[1], self.width + (h * 4), rangeHigh - (h / 2))
+        canv_utils.WriteText(self.canv, self.NormalRange[0], self.width + (h * 4), range_low - (h / 2))
+        canv_utils.WriteText(self.canv, self.NormalRange[1], self.width + (h * 4), range_high - (h / 2))
         self.canv.restoreState()
-
 
     def draw(self):
         """
@@ -197,16 +200,16 @@ class BPGraph(Flowable):
         self.Figure(grid=True)
 
         if self.Q2 is not None:
-            erD = np.array(self.mDataQ2)
+            er_d = np.array(self.mDataQ2)
             x = np.append(self.mDataX, np.flip(self.mDataX))
-            y = np.append(erD[:, 0], np.flip(erD[:, 1]))
-            canv_utils.drawLine(self.canv, x, y, color= (0.16, 0.5, 0.72, 0.3), stroke=1, fill=1, style='dash')
+            y = np.append(er_d[:, 0], np.flip(er_d[:, 1]))
+            canv_utils.drawLine(self.canv, x, y, color=(0.16, 0.5, 0.72, 0.3), stroke=1, fill=1, style='dash')
 
         if self.Q1 is not None:
-            erD = np.array(self.mDataQ1)
+            er_d = np.array(self.mDataQ1)
             x = np.append(self.mDataX, np.flip(self.mDataX))
-            y = np.append(erD[:, 0], np.flip(erD[:, 1]))
-            canv_utils.drawLine(self.canv, x, y, color= (0.16, 0.5, 0.72, 0.4), stroke=0, fill=1)
+            y = np.append(er_d[:, 0], np.flip(er_d[:, 1]))
+            canv_utils.drawLine(self.canv, x, y, color=(0.16, 0.5, 0.72, 0.4), stroke=0, fill=1)
 
         canv_utils.drawLine(self.canv, self.mDataX, self.mDataY)
         self.DrawNormalRange()

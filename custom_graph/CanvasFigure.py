@@ -1,7 +1,7 @@
 from reportlab.platypus import Flowable
 
 from common import canv_utils as canv_utils
-from custom_graph.BPGraph import BPGraph
+from custom_graph.BPAreaGraph import BPAreaGraph
 
 
 class CanvasFigure(Flowable):
@@ -51,10 +51,10 @@ class CanvasFigure(Flowable):
         """
         Draw the shape, text, etc
         """
-        self.setTitle("--- Blood Pressure Graph ---")
+        self.setTitle("Blood Pressure Graph")
         self.setXlabel("Time")
         self.setYLabel("Blood Pressure")
         canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
         # canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
-        flowable = BPGraph(self.data, width=self.pWidth, height=self.pHeight)
+        flowable = BPAreaGraph(self.data, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))
