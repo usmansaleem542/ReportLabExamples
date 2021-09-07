@@ -1,12 +1,14 @@
-from reportlab.platypus import (Paragraph, SimpleDocTemplate, Spacer)
+from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 from custom_graph.CanvasFigure import CanvasFigure
-from datetime import datetime
 import json
+import os
 
 
-doc = SimpleDocTemplate("ignore/custom_graph.pdf", pagesize=letter)
+path = './ignore'
+os.makedirs(path, exist_ok=True)
+doc = SimpleDocTemplate(f"{path}/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 
