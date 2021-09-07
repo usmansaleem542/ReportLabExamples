@@ -5,10 +5,11 @@ from reportlab.lib.pagesizes import letter
 from custom_graph.LineGraph import LineGraph
 import pandas as pd
 import json
-
+import os
+print(os.listdir())
 
 def get_values(index):
-    with open('../sample_inputs/line_data.json', 'r') as f:
+    with open('sample_inputs/line_data.json', 'r') as f:
         line_graph = json.loads(f.read())
 
     dt = pd.DataFrame(line_graph[index]['data'])
@@ -19,7 +20,7 @@ def get_values(index):
     return data
 
 
-doc = SimpleDocTemplate("../ignore/custom_graph.pdf", pagesize=letter)
+doc = SimpleDocTemplate("ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 

@@ -9,14 +9,14 @@ import json
 
 
 def get_values():
-    with open('../sample_inputs/range_graph.json', 'r') as f:
+    with open('sample_inputs/range_graph.json', 'r') as f:
         range_graph = json.loads(f.read())
 
     dt = pd.DataFrame(range_graph)
     return dt
 
 
-doc = SimpleDocTemplate("../ignore/custom_graph.pdf", pagesize=letter)
+doc = SimpleDocTemplate("ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 
