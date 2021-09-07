@@ -9,7 +9,7 @@ import json
 
 
 def get_values(index):
-    with open('line_data.json', 'r') as f:
+    with open('../sample_inputs/line_data.json', 'r') as f:
         line_graph = json.loads(f.read())
 
     dt = pd.DataFrame(line_graph[index]['data'])
@@ -20,7 +20,7 @@ def get_values(index):
     return data
 
 
-doc = SimpleDocTemplate("ignore/custom_graph.pdf", pagesize=letter)
+doc = SimpleDocTemplate("../ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 p = Paragraph("This is a table. " * 10, style['Normal'])

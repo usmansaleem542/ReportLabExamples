@@ -1,9 +1,7 @@
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import (Flowable)
-from reportlab.graphics.charts.axes import Color
 
 from common import canv_utils
-import math
 
 
 class RangeGraph(Flowable):
@@ -44,8 +42,8 @@ class RangeGraph(Flowable):
         return self.width, self.height + 50
 
     def Figure(self):
-        pass
         # canv_utils.DrawRectangle(self.canv, (self.x, -self.y), (self.width, self.height))
+        pass
 
     def DrawActual(self, x, y, border=False):
         current = 0

@@ -6,8 +6,8 @@ import os
 
 def get_Point2Pixel(x1, x2, y1, y2, point):
     slope = (y2 - y1) / (x2 - x1)
-    pixVal = y1 + slope * (point - x1)
-    return pixVal
+    pix_val = y1 + slope * (point - x1)
+    return pix_val
 
 
 def gen(x, scale, offset, mult=100):
@@ -16,13 +16,13 @@ def gen(x, scale, offset, mult=100):
     return np.round(dt) + offset
 
 
-def GenerateData(start, end, filename='ignore/sample_data2.json', offset=50, randomN=False):
+def GenerateData(start, end, filename='../sample_inputs/area_graph_data.json', offset=50, randomN=False):
     # dt = datetime.now()
-    dataBP = {"title": "Blood Pressure Graph", "xLabel": "Time", "yLabel": "Blood Pressure",
+    data_bp = {"title": "Blood Pressure Graph", "xLabel": "Time", "yLabel": "Blood Pressure",
               "normal_range": [50, 200],
               "data": {"time": [], "value": [], "Q1": [], "Q2": []}}
 
-    data = dataBP['data']
+    data = data_bp['data']
     x = np.linspace(start, end - 3600)
     y = gen(x, 0.05, offset)
     for i in range(len(x)):
@@ -41,7 +41,8 @@ def GenerateData(start, end, filename='ignore/sample_data2.json', offset=50, ran
         else:
             q2 = [q1[0] - offset, q1[1] + offset]
         data["Q2"].append(q2)
-    # now = datetime(year=2000, month= 1, day= 1, hour=dt.hour, minute=dt.minute, second=dt.second, microsecond=dt.microsecond).timestamp()
+    # now = datetime(year=2000, month= 1, day= 1, hour=dt.hour, minute=dt.minute, second=dt.second,
+    #                microsecond=dt.microsecond).timestamp()
     df = pd.DataFrame(data).sort_values(by='time')
 
     data['time'] = list(df.time)
@@ -52,6 +53,6 @@ def GenerateData(start, end, filename='ignore/sample_data2.json', offset=50, ran
     # print(df.head())
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as f:
-        f.write(json.dumps(dataBP, indent=4))
+        f.write(json.dumps(data_bp, indent=4))
         f.close()
-    return dataBP
+    return data_bp
