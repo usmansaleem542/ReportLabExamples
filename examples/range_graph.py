@@ -19,8 +19,6 @@ def get_values():
 doc = SimpleDocTemplate("../ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
-p = Paragraph("This is a table. " * 10, style['Normal'])
-story.append(p)
 
 start = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
 end = datetime(year=2000, month=1, day=2, hour=0, minute=0, second=0, microsecond=0).timestamp()

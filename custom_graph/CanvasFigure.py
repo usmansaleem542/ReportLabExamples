@@ -17,7 +17,6 @@ class CanvasFigure(Flowable):
         self.pWidth = self.width - (self.Padding['left'] + self.Padding['right'])
 
     def wrap(self, availWidth, availHeight):
-        # print("w,h ", availWidth, availHeight)
         self.aw = availWidth
         self.ah = availHeight
         return self.width, self.height
@@ -54,7 +53,7 @@ class CanvasFigure(Flowable):
         self.setTitle("Blood Pressure Graph")
         self.setXlabel("Time")
         self.setYLabel("Blood Pressure")
-        canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
+        # canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
         # canv_utils.DrawRectangle(self.canv, (self.pX, self.pY), (self.pWidth, self.pHeight), color=(0.0, 0.0, 0.0, 0.1), fill=1)
         flowable = BPAreaGraph(self.data, width=self.pWidth, height=self.pHeight)
         canv_utils.DrawCustomFlowable(self.canv, flowable, (self.pX, self.pY), (self.aw, self.ah))

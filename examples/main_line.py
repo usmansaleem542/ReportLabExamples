@@ -1,9 +1,8 @@
-from reportlab.platypus import (Paragraph, SimpleDocTemplate, Spacer)
+from reportlab.platypus import (SimpleDocTemplate, Spacer)
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 
 from custom_graph.LineGraph import LineGraph
-from datetime import datetime
 import pandas as pd
 import json
 
@@ -23,11 +22,6 @@ def get_values(index):
 doc = SimpleDocTemplate("../ignore/custom_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
-p = Paragraph("This is a table. " * 10, style['Normal'])
-story.append(p)
-
-start = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
-end = datetime(year=2000, month=1, day=2, hour=0, minute=0, second=0, microsecond=0).timestamp()
 
 for i in range(13):
     data = get_values(i)

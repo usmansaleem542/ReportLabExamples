@@ -123,10 +123,10 @@ class BPAreaGraph(Flowable):
             self.canv.drawString(pos[0], pos[1] - (h / 3), str(rowV))
 
     def Figure(self, grid=False):
-        canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height))
         self.canv.saveState()
-        self.canv.setStrokeColor(Color(0.1, 0.1, 0.1, 0.3))
-        self.canv.setFontSize(9)
+        canv_utils.DrawRectangle(self.canv, (0, 0), (self.width, self.height), stroke_color=(0.1, 0.1, 0.1, 0.3))
+        self.canv.setStrokeColor(Color(0.1, 0.1, 0.1, 0.2))
+        self.canv.setFontSize(7)
         self.DrawVGrid(grid)
         self.DrawHGrid(grid)
         self.canv.restoreState()
