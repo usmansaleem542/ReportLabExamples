@@ -29,7 +29,6 @@ class BPAreaGraph(Flowable):
         self.mDataY = self.convert_yAxis_pixels(self.dataY)
         self.mDataQ1 = self.convert_QData_pixels(self.Q1)
         self.mDataQ2 = self.convert_QData_pixels(self.Q2)
-        # self.Padding = {"left": 0, "right": 0, "top": 0, "bottom": 0}
 
     def InitStats(self):
         self.Stats['xAxis'] = {}
@@ -38,7 +37,6 @@ class BPAreaGraph(Flowable):
         self.GetHorizontalPosition()
 
     def wrap(self, availWidth, availHeight):
-        # print("w,h ", availWidth, availHeight)
         self.aw = availWidth
         self.ah = availHeight
         return self.width, self.height + 50

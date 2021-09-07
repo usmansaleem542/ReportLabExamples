@@ -5,8 +5,8 @@ import math
 
 def Point2Pixel(x1, x2, y1, y2, point):
     slope = (y2 - y1) / (x2 - x1)
-    pixVal = y1 + slope * (point - x1)
-    return pixVal
+    pix_val = y1 + slope * (point - x1)
+    return pix_val
 
 
 def DrawLine(canv, loc_from, loc_to, color=(0, 0, 0, 1)):
