@@ -19,7 +19,7 @@ def get_values():
 
 path = './ignore'
 os.makedirs(path, exist_ok=True)
-doc = SimpleDocTemplate(f"{path}/custom_graph.pdf", pagesize=letter)
+doc = SimpleDocTemplate(f"{path}/bar_graph.pdf", pagesize=letter)
 style = getSampleStyleSheet()
 story = []
 
